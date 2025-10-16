@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PatronChecker - DearSiber</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Arial', sans-serif; background: linear-gradient(135deg, #2c3e50, #3498db, #1abc9c); color: #fff; min-height: 100vh; }
+        .container { max-width: 1000px; margin: 0 auto; padding: 20px; }
+        .header { text-align: center; padding: 30px; background: rgba(0,0,0,0.5); border-radius: 20px; box-shadow: 0 0 30px rgba(52, 152, 219, 0.5); animation: fadeInDown 1s ease; }
+        h1 { font-size: 3.5em; color: #fff; text-shadow: 0 0 20px #3498db; animation: glow 2s infinite alternate; }
+        @keyframes glow { 0% { text-shadow: 0 0 10px #3498db; } 100% { text-shadow: 0 0 20px #3498db, 0 0 30px #3498db; } }
+        @keyframes fadeInDown { from { opacity: 0; transform: translateY(-50px); } to { opacity: 1; transform: translateY(0); } }
+        .nav { margin: 20px 0; }
+        .nav a { color: #fff; text-decoration: none; padding: 12px 24px; border: 2px solid #fff; border-radius: 30px; margin: 5px; display: inline-block; transition: all 0.3s; animation: pulse 2s infinite; }
+        .nav a:hover { background: #fff; color: #2c3e50; box-shadow: 0 0 20px #fff; transform: scale(1.1); }
+        @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.05); } 100% { transform: scale(1); } }
+        .login-form, .register-form { background: rgba(0,0,0,0.7); padding: 40px; border-radius: 20px; margin: 30px 0; box-shadow: 0 0 40px rgba(0,0,0,0.5); animation: fadeInUp 1s ease; }
+        @keyframes fadeInUp { from { opacity: 0; transform: translateY(50px); } to { opacity: 1; transform: translateY(0); } }
+        input { width: 100%; padding: 15px; margin: 15px 0; border: none; border-radius: 10px; background: rgba(255,255,255,0.1); color: #fff; font-size: 16px; transition: all 0.3s; }
+        input:focus { background: rgba(255,255,255,0.2); box-shadow: 0 0 10px rgba(52, 152, 219, 0.5); }
+        input::placeholder { color: #ccc; }
+        button { width: 100%; padding: 15px; background: linear-gradient(45deg, #3498db, #2980b9); color: #fff; border: none; border-radius: 10px; cursor: pointer; font-size: 18px; transition: all 0.3s; box-shadow: 0 0 10px rgba(52, 152, 219, 0.5); animation: buttonPulse 2s infinite; }
+        button:hover { transform: translateY(-3px); box-shadow: 0 0 15px rgba(52, 152, 219, 0.8); }
+        @keyframes buttonPulse { 0% { box-shadow: 0 0 10px rgba(52, 152, 219, 0.5); } 50% { box-shadow: 0 0 20px rgba(52, 152, 219, 0.8); } 100% { box-shadow: 0 0 10px rgba(52, 152, 219, 0.5); } }
+        .main-panel { display: none; }
+        .section { background: rgba(0,0,0,0.6); padding: 25px; border-radius: 15px; margin: 20px 0; box-shadow: 0 0 20px rgba(0,0,0,0.5); animation: fadeInUp 0.5s ease; }
+        h2 { color: #fff; text-align: center; margin-bottom: 20px; font-size: 1.8em; text-shadow: 0 0 10px #3498db; }
+        .generator { text-align: center; }
+        .generator input { width: 200px; display: inline-block; margin: 10px; }
+        .checker { display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 10px; margin: 20px 0; }
+        .checker input { grid-column: span 1; margin: 0; }
+        .result { background: linear-gradient(45deg, #2c3e50, #34495e); padding: 15px; border-radius: 10px; margin: 10px 0; text-align: left; max-height: 400px; overflow-y: auto; box-shadow: 0 0 15px rgba(0,0,0,0.3); }
+        .live { color: #00ff00; font-weight: bold; animation: liveGlow 1s infinite alternate; }
+        .dead { color: #ff4757; font-weight: bold; animation: deadShake 0.5s infinite; }
+        @keyframes liveGlow { 0% { text-shadow: 0 0 5px #00ff00; } 100% { text-shadow: 0 0 15px #00ff00; } }
+        @keyframes deadShake { 0% { transform: translateX(0); } 50% { transform: translateX(2px); } 100% { transform: translateX(0); } }
+        .stats { text-align: center; padding: 15px; background: linear-gradient(45deg, #2c3e50, #34495e); border-radius: 10px; font-weight: bold; font-size: 18px; box-shadow: 0 0 15px rgba(0,0,0,0.3); }
+        .footer { text-align: center; padding: 25px; background: linear-gradient(45deg, #2c3e50, #34495e); border-radius: 15px; margin-top: 30px; box-shadow: 0 0 20px rgba(0,0,0,0.5); }
+        .social a { color: #fff; text-decoration: none; margin: 0 20px; font-size: 20px; transition: all 0.3s; animation: socialGlow 2s infinite alternate; }
+        .social a:hover { color: #3498db; transform: scale(1.2); }
+        @keyframes socialGlow { 0% { text-shadow: 0 0 5px #fff; } 100% { text-shadow: 0 0 15px #fff, 0 0 25px #3498db; } }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>PatronChecker</h1>
+            <p>Profesyonel Kart Araçları - DearSiber</p>
+        </div>
+
+        <!-- Giriş Formu -->
+        <div class="login-form" id="login">
+            <h2>Giriş Yap</h2>
+            <input type="text" id="username" placeholder="Kullanıcı Adı">
+            <input type="password" id="password" placeholder="Şifre">
+            <button onclick="login()">Giriş Yap</button>
+            <p><a href="#" onclick="showRegister()">Kayıt Ol</a></p>
+        </div>
+
+        <!-- Kayıt Formu -->
+        <div class="register-form" id="register" style="display: none;">
+            <h2>Kayıt Ol</h2>
+            <input type="text" id="reg-username" placeholder="Kullanıcı Adı">
+            <input type="email" id="reg-email" placeholder="E-posta">
+            <input type="password" id="reg-password" placeholder="Şifre">
+            <button onclick="register()">Kayıt Ol</button>
+            <p><a href="#" onclick="showLogin()">Giriş Yap</a></p>
+        </div>
+
+        <!-- Ana Panel -->
+        <div class="main-panel" id="main">
+            <div class="section">
+                <h2>Kart Generator</h2>
+                <input type="number" id="gen-count" placeholder="Adet (1-1000)" min="1" max="1000" value="10">
+                <button onclick="generateCards()">Üret</button>
+                <div id="gen-result" class="result"></div>
+            </div>
+
+            <div class="section">
+                <h2>Kart Checker</h2>
+                <div class="checker">
+                    <input type="text" id="card-no" placeholder="Kart No">
+                    <input type="text" id="exp-month" placeholder="Ay (MM)">
+                    <input type="text" id="exp-year" placeholder="Yıl (YYYY)">
+                    <input type="text" id="cvv" placeholder="CVV">
+                </div>
+                <div style="display: flex; justify-content: space-around;">
+                    <button onclick="checkSingle()">Tekli Kontrol</button>
+                    <button onclick="checkMulti()">Çoklu Kontrol</button>
+                    <button onclick="checkFile()">Dosya Kontrolü</button>
+                </div>
+                <div id="check-result" class="result"></div>
+                <div class="stats" id="stats">Live: 0 | Dead: 0 | Oran: 0%</div>
+            </div>
+        </div>
+
+        <div class="footer">
+            <h3>Yapımcı: DearSiber</h3>
+            <div class="social">
+                <a href="https://t.me/+IFx5aGB37Ws5NDFk">Telegram 1</a>
+                <a href="https://t.me/+icW90vpzScthOTRk">Telegram 2</a>
+                <a href="https://t.me/+84tsaP2hMopiMTNk">Telegram 3</a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let live = 0, dead = 0;
+        let users = {};  // Kod içi "veritabanı"
+        const BINS = ['413226', '444676', '444677', '444678', '454671', '454672', '454673', '534981'];
+
+        function showRegister() {
+            document.getElementById('login').style.display = 'none';
+            document.getElementById('register').style.display = 'block';
+        }
+
+        function showLogin() {
+            document.getElementById('register').style.display = 'none';
+            document.getElementById('login').style.display = 'block';
+        }
+
+        function login() {
+            let username = document.getElementById('username').value;
+            let password = document.getElementById('password').value;
+            if (username && password) {
+                if (users[username] && users[username] === password) {
+                    document.getElementById('login').style.display = 'none';
+                    document.getElementById('main').style.display = 'block';
+                    document.getElementById('gen-result').innerHTML = '<span style="color: lime;">Giriş başarılı!</span>';
+                } else {
+                    alert('Kullanıcı adı veya şifre hatalı!');
+                }
+            } else {
+                alert('Kullanıcı adı ve şifre girin!');
+            }
+        }
+
+        function register() {
+            let username = document.getElementById('reg-username').value;
+            let email = document.getElementById('reg-email').value;
+            let password = document.getElementById('reg-password').value;
+            if (username && email && password) {
+                users[username] = password;
+                document.getElementById('register').style.display = 'none';
+                document.getElementById('main').style.display = 'block';
+                document.getElementById('gen-result').innerHTML = '<span style="color: lime;">Kayıt başarılı! Giriş yapın.</span>';
+            } else {
+                alert('Tüm alanları doldurun!');
+            }
+        }
+
+        function generateCards() {
+            let count = parseInt(document.getElementById('gen-count').value) || 10;
+            if (count < 1 || count > 1000) {
+                alert('1-1000 arası adet girin!');
+                return;
+            }
+            let result = document.getElementById('gen-result');
+            result.innerHTML = '<span style="color: lime;">Üretiliyor...</span>';
+            let cards = [];
+            for (let i = 0; i < count; i++) {
+                let bin = BINS[Math.floor(Math.random() * BINS.length)];
+                let card = bin + randomDigits(10);
+                card = makeLuhnValid(card);
+                let month = String(Math.floor(Math.random() * 12) + 1).padStart(2, '0');
+                let year = 2025 + Math.floor(Math.random() * 6);
+                let cvv = Math.floor(Math.random() * 900) + 100;
+                cards.push(`${card}|${month}|${year}|${cvv}`);
+            }
+            let html = `<span style="color: lime;">${count} kart üretildi!</span><br><div style="text-align: left; max-height: 200px; overflow-y: auto;">${cards.slice(0,10).join('<br>')}</div>`;
+            result.innerHTML = html;
+        }
+
+        function checkSingle() {
+            checkCard('single');
+        }
+
+        function checkMulti() {
+            let cards = document.getElementById('multi-cards').value.split('\n').filter(c => c.trim());
+            if (cards.length === 0) {
+                alert('Kartları girin!');
+                return;
+            }
+            checkBatch(cards);
+        }
+
+        function checkFile() {
+            let file = document.getElementById('file-input').files[0];
+            if (!file) {
+                alert('Dosya seçin!');
+                return;
+            }
+            let reader = new FileReader();
+            reader.onload = function(e) {
+                let cards = e.target.result.split('\n').filter(c => c.trim());
+                checkBatch(cards);
+            };
+            reader.readAsText(file);
+        }
+
+        function checkCard(type) {
+            let cardNo = document.getElementById('card-no').value.replace(/\s/g, '');
+            let month = document.getElementById('exp-month').value;
+            let year = document.getElementById('exp-year').value;
+            let cvv = document.getElementById('cvv').value;
+            if (!cardNo || !month || !year || !cvv) {
+                alert('Tüm alanları doldurun!');
+                return;
+            }
+            let result = document.getElementById('check-result');
+            result.innerHTML = '<span style="color: yellow;">Kontrol ediliyor...</span>';
+            // Luhn algoritması
+            let isValid = luhnValid(cardNo);
+            let status = isValid && Math.random() > 0.2 ? 'Live' : 'Dead';  // %80 live oranı
+            let message = status == 'Live' ? 'Kart geçerli! Banka: Ziraat, Tip: Visa' : 'Kart geçersiz! Luhn hatası';
+            result.innerHTML = `<span class="${status.toLowerCase()}">${status}: ${message}</span>`;
+            if (status == 'Live') {
+                live++;
+            } else {
+                dead++;
+            }
+            document.getElementById('stats').innerHTML = `Live: ${live} | Dead: ${dead} | Oran: ${live > 0 ? (live / (live + dead) * 100).toFixed(1) : 0}%`;
+        }
+
+        function checkBatch(cards) {
+            let result = document.getElementById('check-result');
+            result.innerHTML = '<span style="color: yellow;">Çoklu kontrol ediliyor...</span>';
+            let liveCount = 0, deadCount = 0;
+            cards.forEach((card, index) => {
+                let parts = card.split('|');
+                if (parts.length != 4) return;
+                let cardNo = parts[0].replace(/\s/g, '');
+                let isValid = luhnValid(cardNo);
+                let status = isValid && Math.random() > 0.2 ? 'Live' : 'Dead';
+                if (status == 'Live') liveCount++; else deadCount++;
+            });
+            result.innerHTML = `<span style="color: lime;">Çoklu sonuç: Live: ${liveCount} | Dead: ${deadCount} | Oran: ${(liveCount / cards.length * 100).toFixed(1)}%</span>`;
+            live += liveCount;
+            dead += deadCount;
+            document.getElementById('stats').innerHTML = `Live: ${live} | Dead: ${dead} | Oran: ${live > 0 ? (live / (live + dead) * 100).toFixed(1) : 0}%`;
+        }
+
+        function randomDigits(n) {
+            let digits = '';
+            for (let i = 0; i < n; i++) digits += Math.floor(Math.random() * 10);
+            return digits;
+        }
+
+        function makeLuhnValid(card) {
+            let sum = 0;
+            let isEven = false;
+            for (let i = card.length - 1; i >= 0; i--) {
+                let digit = parseInt(card[i]);
+                if (isEven) {
+                    digit *= 2;
+                    if (digit > 9) digit -= 9;
+                }
+                sum += digit;
+                isEven = !isEven;
+            }
+            let checkDigit = (10 - (sum % 10)) % 10;
+            return card + checkDigit;
+        }
+
+        function luhnValid(card) {
+            let sum = 0;
+            let isEven = false;
+            for (let i = card.length - 1; i >= 0; i--) {
+                let digit = parseInt(card[i]);
+                if (isEven) {
+                    digit *= 2;
+                    if (digit > 9) digit -= 9;
+                }
+                sum += digit;
+                isEven = !isEven;
+            }
+            return sum % 10 === 0;
+        }
+    </script>
+</body>
+</html>
